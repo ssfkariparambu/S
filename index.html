@@ -55,12 +55,19 @@
 
     <!-- Control Buttons -->
     <div class="buttons">
-        <button class="btn" onclick="addRow()">+ Add Row</button>
-        <button class="btn btn-danger" onclick="deleteRow()">Delete Row</button>
-        <button class="btn btn-print" onclick="printSheet()">Print</button>
+    <button onclick="addRow()">+ Add Row</button>
+    <button onclick="deleteRow()">Delete Row</button>
+    <button onclick="printSheet()">Print</button>
+    <button onclick="downloadPNG()">PNG</button>
+    <button onclick="downloadPDF()">PDF</button>
+    <button onclick="clearSheet()">Clear</button>
     </div>
 
-    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="script.js"></script>
 
 </body>
 </html>
