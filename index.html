@@ -687,7 +687,7 @@ const tableBody = document.getElementById("tableBody");
 
 window.addEventListener("load", () => {
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 1; i++) {
 
         createRow();
 
@@ -761,15 +761,15 @@ function updateHeight() {
 
     const rows = tableBody.rows.length;
 
-    if (rows <= 8) {
+    if (rows <= 1) {
 
-        sheet.style.height = "14.85cm";
+        sheet.style.height = "";
 
     } else {
 
-        const extra = rows - 8;
+        const extra = rows - 1;
 
-        const newHeight = 14.85 + (extra * 1.02);
+        const newHeight =  + (extra * 1.02);
 
         sheet.style.height = newHeight + "cm";
 
