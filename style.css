@@ -1,6 +1,6 @@
-/* ==========================
+/* ===================================
    RESET
-========================== */
+=================================== */
 
 *{
     margin:0;
@@ -8,38 +8,42 @@
     box-sizing:border-box;
 }
 
-body{
-    background:#dcdcdc;
+html,body{
+    width:100%;
+    height:100%;
     font-family:Arial, Helvetica, sans-serif;
+    background:#d9d9d9;
+}
+
+body{
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding:30px;
+    padding:20px;
 }
 
-/* ==========================
+/* ===================================
    SHEET
-========================== */
+=================================== */
 
 .sheet{
     width:21cm;
     min-height:14.85cm;
     background:#fff;
     border:3px solid #000;
-    padding:10px 12px;
-    display:flex;
-    flex-direction:column;
+    padding:12px;
+    position:relative;
 }
 
-/* ==========================
+/* ===================================
    HEADER
-========================== */
+=================================== */
 
 .top-header{
     display:grid;
-    grid-template-columns:90px 1fr 95px;
-    align-items:flex-start;
-    margin-bottom:18px;
+    grid-template-columns:85px 1fr 85px;
+    align-items:center;
+    margin-bottom:12px;
 }
 
 .left-logo{
@@ -48,145 +52,176 @@ body{
 }
 
 .fest-logo{
-    width:440px;
+    width:430px;
     max-width:100%;
-    justify-self:start;
+    justify-self:center;
 }
 
 .edition-logo{
-    width:82px;
+    width:78px;
     justify-self:end;
 }
 
-/* ==========================
-   EVENT NAME
-========================== */
+/* ===================================
+   EVENT TITLE
+=================================== */
 
 .event-name{
-    font-size:24px;
+    width:100%;
+    font-size:23px;
     font-weight:900;
-    letter-spacing:.5px;
     text-transform:uppercase;
-    margin-bottom:16px;
+    margin:8px 0 15px;
     outline:none;
 }
 
-/* ==========================
+/* ===================================
    TABLE
-========================== */
+=================================== */
 
 table{
     width:100%;
     border-collapse:collapse;
 }
 
-th,
-td{
+table th,
+table td{
     border:2px solid #000;
 }
 
-th{
-    height:48px;
-    font-size:17px;
-    font-weight:800;
+table th{
+    height:42px;
+    font-size:16px;
+    font-weight:700;
     text-align:center;
 }
 
-td{
-    height:38px;
-    font-size:16px;
+table td{
+    height:36px;
     padding:6px 8px;
-}
-
-tbody td{
+    font-size:15px;
     outline:none;
 }
 
-/* ==========================
-   COLUMN WIDTH
-========================== */
+/* Column Width */
 
-th:nth-child(1),
-td:nth-child(1){
+table th:nth-child(1),
+table td:nth-child(1){
     width:55px;
     text-align:center;
 }
 
-th:nth-child(2),
-td:nth-child(2){
-    width:360px;
+table th:nth-child(2),
+table td:nth-child(2){
+    width:340px;
 }
 
-th:nth-child(3),
-td:nth-child(3){
-    width:180px;
-    text-align:center;
-}
-
-th:nth-child(4),
-td:nth-child(4){
-    width:90px;
-    text-align:center;
-}
-
-th:nth-child(5),
-td:nth-child(5){
-    width:90px;
-    text-align:center;
-}
-
-th:nth-child(6),
-td:nth-child(6){
-    width:90px;
-    text-align:center;
-}
-
-th:nth-child(7),
-td:nth-child(7){
-    width:110px;
-    text-align:center;
-}
-
-th:nth-child(8),
-td:nth-child(8){
+table th:nth-child(3),
+table td:nth-child(3){
     width:150px;
+    text-align:center;
 }
 
-/* ==========================
+table th:nth-child(4),
+table td:nth-child(4){
+    width:85px;
+    text-align:center;
+}
+
+table th:nth-child(5),
+table td:nth-child(5){
+    width:85px;
+    text-align:center;
+}
+
+table th:nth-child(6),
+table td:nth-child(6){
+    width:90px;
+    text-align:center;
+}
+
+table th:nth-child(7),
+table td:nth-child(7){
+    width:90px;
+    text-align:center;
+}
+
+table th:nth-child(8),
+table td:nth-child(8){
+    width:140px;
+}
+
+/* ===================================
+   CONTENTEDITABLE
+=================================== */
+
+[contenteditable="true"]{
+    cursor:text;
+}
+
+[contenteditable="true"]:focus{
+    background:#fffde7;
+    outline:none;
+}
+
+td:empty::before,
+.event-name:empty::before{
+    content:attr(data-placeholder);
+    color:#999;
+}
+
+/* ===================================
    BUTTONS
-========================== */
+=================================== */
 
 .buttons{
+    width:21cm;
     margin-top:20px;
     display:flex;
-    gap:12px;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
 }
 
-button{
-    padding:12px 22px;
-    border:none;
+.buttons button{
     background:#000;
     color:#fff;
-    cursor:pointer;
-    font-size:16px;
+    border:none;
+    padding:12px 24px;
+    font-size:15px;
+    font-weight:600;
     border-radius:6px;
+    cursor:pointer;
+    transition:.25s;
 }
 
-button:hover{
-    opacity:.9;
+.buttons button:hover{
+    background:#222;
 }
 
-/* ==========================
+.buttons button:active{
+    transform:scale(.96);
+}
+
+/* ===================================
    AUTO HEIGHT
-========================== */
+=================================== */
 
-.sheet.auto-height{
-    height:auto;
+.sheet{
+    transition:height .25s ease;
 }
 
-/* ==========================
+/* ===================================
+   SCROLL
+=================================== */
+
+body{
+    overflow-x:auto;
+}
+
+/* ===================================
    PRINT
-========================== */
+=================================== */
 
 @page{
     size:A5 landscape;
@@ -198,6 +233,7 @@ button:hover{
     body{
         background:#fff;
         padding:0;
+        margin:0;
     }
 
     .buttons{
@@ -209,23 +245,197 @@ button:hover{
         min-height:14.85cm;
         border:3px solid #000;
         margin:0;
+        page-break-after:avoid;
         page-break-inside:avoid;
     }
+
+    table{
+        page-break-inside:avoid;
+    }
+
+    tr{
+        page-break-inside:avoid;
+    }
+
 }
 
-/* ==========================
+/* ===================================
+   TABLE ALIGNMENT
+=================================== */
+
+tbody td:nth-child(1),
+tbody td:nth-child(3),
+tbody td:nth-child(4),
+tbody td:nth-child(5),
+tbody td:nth-child(6),
+tbody td:nth-child(7){
+    text-align:center;
+    vertical-align:middle;
+}
+
+tbody td:nth-child(2),
+tbody td:nth-child(8){
+    text-align:left;
+    vertical-align:middle;
+    padding-left:8px;
+}
+
+/* ===================================
    MOBILE
-========================== */
+=================================== */
 
 @media(max-width:900px){
 
     body{
-        overflow-x:auto;
-        padding:15px;
+        align-items:flex-start;
+        padding:10px;
     }
 
     .sheet{
         width:21cm;
         min-width:21cm;
     }
+
+    .buttons{
+        width:21cm;
+    }
+
+}
+
+/* ===================================
+   PIXEL PERFECT FINISHING
+=================================== */
+
+.sheet{
+    box-shadow:0 3px 12px rgba(0,0,0,.12);
+}
+
+/* Header */
+
+.top-header{
+    padding-bottom:8px;
+}
+
+.left-logo{
+    display:block;
+    object-fit:contain;
+}
+
+.fest-logo{
+    display:block;
+    object-fit:contain;
+    margin:auto;
+}
+
+.edition-logo{
+    display:block;
+    object-fit:contain;
+}
+
+/* Event */
+
+.event-name{
+    text-align:left;
+    padding-left:2px;
+    letter-spacing:.4px;
+    line-height:1.2;
+}
+
+/* Table */
+
+table{
+    table-layout:fixed;
+}
+
+thead th{
+    background:#fff;
+    white-space:nowrap;
+}
+
+tbody tr:hover td{
+    background:#fafafa;
+}
+
+tbody td{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+/* Signature */
+
+tbody td:last-child{
+    padding-left:10px;
+}
+
+/* Better Borders */
+
+table,
+thead,
+tbody,
+tr{
+    border-color:#000;
+}
+
+/* Smooth Editing */
+
+td{
+    transition:.15s;
+}
+
+td:focus{
+    background:#fff8cc;
+}
+
+/* Selection */
+
+::selection{
+    background:#b7d8ff;
+}
+
+/* Disable image drag */
+
+img{
+    user-select:none;
+    -webkit-user-drag:none;
+    pointer-events:none;
+}
+
+/* Print Optimization */
+
+@media print{
+
+    *{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .sheet{
+        box-shadow:none;
+    }
+
+}
+
+/* Large Screens */
+
+@media(min-width:1400px){
+
+    body{
+        padding:30px;
+    }
+
+}
+
+/* Small Screens */
+
+@media(max-width:600px){
+
+    .buttons{
+        flex-direction:column;
+    }
+
+    .buttons button{
+        width:100%;
+    }
+
 }
