@@ -1,20 +1,31 @@
-const tableBody = document.getElementById("tableBody");
+/* ============================================
+   SAHITYOTSAV BULK IMAGE GENERATOR
+   script.js
+   PART - 1
+============================================ */
+
 const sheet = document.querySelector(".sheet");
+const tableBody = document.getElementById("tableBody");
 
-// ===============================
-// Create Default 9 Rows
-// ===============================
+/* -------------------------
+   Default Rows
+------------------------- */
 
-window.onload = function () {
+window.addEventListener("load", () => {
+
     for (let i = 0; i < 9; i++) {
-        createRow();
-    }
-    updateSheetHeight();
-};
 
-// ===============================
-// Create Row
-// ===============================
+        createRow();
+
+    }
+
+    updateHeight();
+
+});
+
+/* -------------------------
+   Create Row
+------------------------- */
 
 function createRow() {
 
@@ -22,13 +33,19 @@ function createRow() {
 
     for (let i = 0; i < 8; i++) {
 
-        const cell = document.createElement("td");
+        const td = document.createElement("td");
 
-        cell.contentEditable = "true";
+        td.contentEditable = true;
 
-        cell.spellcheck = false;
+        td.spellcheck = false;
 
-        row.appendChild(cell);
+        td.setAttribute("data-cell", i);
+
+        td.addEventListener("focus", highlightCell);
+
+        td.addEventListener("blur", removeHighlight);
+
+        row.appendChild(td);
 
     }
 
@@ -36,41 +53,39 @@ function createRow() {
 
 }
 
-// ===============================
-// Add Row
-// ===============================
+/* -------------------------
+   Add Row
+------------------------- */
 
 function addRow() {
 
     createRow();
 
-    updateSheetHeight();
+    updateHeight();
 
 }
 
-// ===============================
-// Delete Last Row
-// ===============================
+/* -------------------------
+   Delete Row
+------------------------- */
 
 function deleteRow() {
 
-    if (tableBody.rows.length > 1) {
+    if (tableBody.rows.length <= 1) return;
 
-        tableBody.removeChild(tableBody.lastElementChild);
+    tableBody.removeChild(tableBody.lastElementChild);
 
-        updateSheetHeight();
-
-    }
+    updateHeight();
 
 }
 
-// ===============================
-// Auto Height
-// ===============================
+/* -------------------------
+   Auto Height
+------------------------- */
 
-function updateSheetHeight() {
+function updateHeight() {
 
-    let rows = tableBody.rows.length;
+    const rows = tableBody.rows.length;
 
     if (rows <= 9) {
 
@@ -78,33 +93,87 @@ function updateSheetHeight() {
 
     } else {
 
-        let extraRows = rows - 9;
+        const extra = rows - 9;
 
-        let height = 14.85 + (extraRows * 1.02);
+        const newHeight = 14.85 + (extra * 1.02);
 
-        sheet.style.height = height + "cm";
+        sheet.style.height = newHeight + "cm";
 
     }
 
 }
 
-// ===============================
-// Enter Key → Next Cell
-// ===============================
+/* -------------------------
+   Highlight Editing Cell
+------------------------- */
 
-document.addEventListener("keydown", function (e) {
+function highlightCell(e) {
 
-    if (e.key === "Enter" && e.target.isContentEditable) {
+    e.target.style.background = "#fff6bf";
+
+}
+
+function removeHighlight(e) {
+
+    e.target.style.background = "";
+
+}
+
+/* -------------------------
+   Prevent Rich Text Paste
+------------------------- */
+
+document.addEventListener("paste", function(e){
+
+    if(e.target.isContentEditable){
 
         e.preventDefault();
 
-        let editable = [...document.querySelectorAll("[contenteditable='true']")];
+        const text =
+        (e.clipboardData || window.clipboardData)
+        .getData("text/plain");
 
-        let index = editable.indexOf(document.activeElement);
+        document.execCommand("insertText",false,text);
 
-        if (index + 1 < editable.length) {
+    }
 
-            editable[index + 1].focus();
+});
+
+/* ============================================
+   SAHITYOTSAV BULK IMAGE GENERATOR
+   script.js
+   PART - 2
+============================================ */
+
+/* -------------------------
+   All Editable Cells
+------------------------- */
+
+function getEditableCells() {
+
+    return [...document.querySelectorAll("[contenteditable='true']")];
+
+}
+
+/* -------------------------
+   Enter = Next Cell
+------------------------- */
+
+document.addEventListener("keydown", function (e) {
+
+    if (!e.target.isContentEditable) return;
+
+    if (e.key === "Enter") {
+
+        e.preventDefault();
+
+        const cells = getEditableCells();
+
+        const index = cells.indexOf(document.activeElement);
+
+        if (index < cells.length - 1) {
+
+            cells[index + 1].focus();
 
         }
 
@@ -112,25 +181,35 @@ document.addEventListener("keydown", function (e) {
 
 });
 
-// ===============================
-// Tab Key → Next Cell
-// ===============================
+/* -------------------------
+   TAB = Next Cell
+------------------------- */
 
 document.addEventListener("keydown", function (e) {
 
+    if (!e.target.isContentEditable) return;
+
     if (e.key === "Tab") {
 
-        let editable = [...document.querySelectorAll("[contenteditable='true']")];
+        e.preventDefault();
 
-        let index = editable.indexOf(document.activeElement);
+        const cells = getEditableCells();
 
-        if (index !== -1) {
+        const index = cells.indexOf(document.activeElement);
 
-            e.preventDefault();
+        if (e.shiftKey) {
 
-            if (index + 1 < editable.length) {
+            if (index > 0) {
 
-                editable[index + 1].focus();
+                cells[index - 1].focus();
+
+            }
+
+        } else {
+
+            if (index < cells.length - 1) {
+
+                cells[index + 1].focus();
 
             }
 
@@ -140,30 +219,281 @@ document.addEventListener("keydown", function (e) {
 
 });
 
-// ===============================
-// Paste Plain Text
-// ===============================
+/* -------------------------
+   Arrow Navigation
+------------------------- */
 
-document.addEventListener("paste", function (e) {
+document.addEventListener("keydown", function (e) {
 
-    if (e.target.isContentEditable) {
+    if (!e.target.isContentEditable) return;
 
-        e.preventDefault();
+    const cells = getEditableCells();
 
-        let text = (e.clipboardData || window.clipboardData).getData("text");
+    const current = document.activeElement;
 
-        document.execCommand("insertText", false, text);
+    const index = cells.indexOf(current);
+
+    if (index === -1) return;
+
+    switch (e.key) {
+
+        case "ArrowRight":
+
+            e.preventDefault();
+
+            if (cells[index + 1]) {
+
+                cells[index + 1].focus();
+
+            }
+
+            break;
+
+        case "ArrowLeft":
+
+            e.preventDefault();
+
+            if (cells[index - 1]) {
+
+                cells[index - 1].focus();
+
+            }
+
+            break;
 
     }
 
 });
 
-// ===============================
-// Print
-// ===============================
+/* -------------------------
+   Double Click Select Text
+------------------------- */
+
+document.addEventListener("dblclick", function (e) {
+
+    if (e.target.isContentEditable) {
+
+        document.execCommand("selectAll", false, null);
+
+    }
+
+});
+
+/* -------------------------
+   Empty Cell Protection
+------------------------- */
+
+document.addEventListener("blur", function (e) {
+
+    if (!e.target.isContentEditable) return;
+
+    if (e.target.innerHTML === "<br>") {
+
+        e.target.innerHTML = "";
+
+    }
+
+}, true);
+
+/* -------------------------
+   Trim Spaces
+------------------------- */
+
+document.addEventListener("input", function (e) {
+
+    if (!e.target.isContentEditable) return;
+
+    e.target.innerText = e.target.innerText.replace(/\s{2,}/g, " ");
+
+});
+
+/* -------------------------
+   Prevent Drag
+------------------------- */
+
+document.addEventListener("dragstart", function (e) {
+
+    e.preventDefault();
+
+});
+
+/* -------------------------
+   CTRL + P
+------------------------- */
+
+document.addEventListener("keydown", function (e) {
+
+    if (e.ctrlKey && e.key.toLowerCase() === "p") {
+
+        e.preventDefault();
+
+        printSheet();
+
+    }
+
+});
+
+/* -------------------------
+   Print
+------------------------- */
 
 function printSheet() {
 
     window.print();
 
 }
+
+/* ============================================
+   SAHITYOTSAV BULK IMAGE GENERATOR
+   PART - 3
+============================================ */
+
+/* -------------------------
+   Clear All Cells
+------------------------- */
+
+function clearSheet() {
+
+    if (!confirm("Clear all data?")) return;
+
+    document.querySelectorAll("td[contenteditable='true']").forEach(cell => {
+        cell.innerHTML = "";
+    });
+
+    document.querySelector(".event-name").innerHTML = "LP PENCIL DRAWING";
+
+}
+
+/* -------------------------
+   Download PNG
+------------------------- */
+
+async function downloadPNG() {
+
+    const canvas = await html2canvas(sheet, {
+        scale: 3,
+        backgroundColor: "#ffffff",
+        useCORS: true
+    });
+
+    const link = document.createElement("a");
+
+    link.download = "Result Sheet.png";
+
+    link.href = canvas.toDataURL("image/png");
+
+    link.click();
+
+}
+
+/* -------------------------
+   Download PDF
+------------------------- */
+
+async function downloadPDF() {
+
+    const canvas = await html2canvas(sheet, {
+        scale: 3,
+        backgroundColor: "#ffffff",
+        useCORS: true
+    });
+
+    const img = canvas.toDataURL("image/png");
+
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "cm",
+        format: [21, 14.85]
+    });
+
+    pdf.addImage(img, "PNG", 0, 0, 21, 14.85);
+
+    pdf.save("Result Sheet.pdf");
+
+}
+
+/* -------------------------
+   Keyboard Shortcuts
+------------------------- */
+
+document.addEventListener("keydown", function(e){
+
+    if(e.ctrlKey && e.key==="="){
+
+        e.preventDefault();
+
+        addRow();
+
+    }
+
+    if(e.ctrlKey && e.key==="-"){
+
+        e.preventDefault();
+
+        deleteRow();
+
+    }
+
+    if(e.ctrlKey && e.key.toLowerCase()==="d"){
+
+        e.preventDefault();
+
+        downloadPNG();
+
+    }
+
+    if(e.ctrlKey && e.key.toLowerCase()==="s"){
+
+        e.preventDefault();
+
+        downloadPDF();
+
+    }
+
+});
+
+/* -------------------------
+   Auto Focus First Cell
+------------------------- */
+
+window.addEventListener("load",()=>{
+
+    setTimeout(()=>{
+
+        const first=document.querySelector("td");
+
+        if(first){
+
+            first.focus();
+
+        }
+
+    },300);
+
+});
+
+/* -------------------------
+   Prevent Image Drag
+------------------------- */
+
+document.querySelectorAll("img").forEach(img=>{
+
+    img.setAttribute("draggable","false");
+
+});
+
+/* -------------------------
+   Disable Context Menu
+------------------------- */
+
+document.addEventListener("contextmenu",function(e){
+
+    e.preventDefault();
+
+});
+
+/* ============================================
+   END OF SCRIPT
+============================================ */
