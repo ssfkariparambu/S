@@ -970,18 +970,6 @@ document.addEventListener("blur", function (e) {
 }, true);
 
 /* -------------------------
-   Trim Spaces
-------------------------- */
-
-document.addEventListener("input", function(e){
-
-    if(!e.target.isContentEditable) return;
-
-    e.target.textContent = e.target.textContent.replace(/\s{2,}/g," ");
-
-});
-
-/* -------------------------
    Prevent Drag
 ------------------------- */
 
