@@ -227,7 +227,7 @@ table td:nth-child(2){
     width:31%;
     text-align:left;
 }
-        
+
 /* BLOCK */
 table th:nth-child(3),
 table td:nth-child(3){
@@ -359,6 +359,36 @@ td:empty::before,
 .buttons button:active{
 
     transform:scale(.96);
+
+}
+
+.all{
+
+    padding:10px;
+    
+    width:49%;
+    
+    display:flex;
+    
+    flex-direction:row;
+    
+    align-items:center;
+    
+    justify-content:center;
+
+}
+
+.all-btn{
+    
+    display:flex;
+    
+    flex-direction:row;
+    
+    align-items:center;
+    
+    justify-content:center;
+    
+    gap:2%;
 
 }
 
@@ -614,8 +644,27 @@ img{
     <button onclick="printSheet()">Print</button>
     <button onclick="downloadPNG()">PNG</button>
     <button onclick="downloadPDF()">PDF</button>
+    <button onclick="openGallery()">ALL</button>
     <button onclick="clearSheet()">Clear</button>
     </div>
+    
+    <div id="gallery" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000000aa; overflow:auto;">
+    
+    <div style="background:#fff; margin:50px auto; padding:20px; width:80%; max-width:900px;">
+        
+        <h2>Created Images</h2>
+
+        <div id="imageList" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+        
+        <div class="all-btn">
+
+        <button class="all" onclick="generateGalleryPDF()">Export PDF</button>
+        <button class="all" onclick="closeGallery()">Close</button>
+        
+        </div>
+
+    </div>
+</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -921,6 +970,18 @@ document.addEventListener("blur", function (e) {
 }, true);
 
 /* -------------------------
+   Trim Spaces
+------------------------- */
+
+document.addEventListener("input", function(e){
+
+    if(!e.target.isContentEditable) return;
+
+    e.target.textContent = e.target.textContent.replace(/\s{2,}/g," ");
+
+});
+
+/* -------------------------
    Prevent Drag
 ------------------------- */
 
@@ -1112,6 +1173,138 @@ document.addEventListener("contextmenu",function(e){
     e.preventDefault();
 
 });
+
+/* =========================
+   GLOBAL STORAGE
+========================= */
+
+let createdImages = [];
+
+/* =========================
+   LOAD SAVED DATA
+========================= */
+window.addEventListener("load", () => {
+
+    const saved = localStorage.getItem("createdImages");
+
+    if (saved) {
+        createdImages = JSON.parse(saved);
+    }
+
+});
+
+/* =========================
+   CREATE / SAVE IMAGE
+========================= */
+async function downloadPNG() {
+
+    const canvas = await html2canvas(sheet, {
+        scale: 3,
+        backgroundColor: "#ffffff",
+        useCORS: true
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+
+    let eventName = document.querySelector(".event-name").innerText.trim();
+    eventName = eventName.replace(/[\\/:*?"<>|]/g, "");
+
+    const newImage = {
+        id: Date.now(),
+        name: eventName,
+        data: imgData
+    };
+
+    createdImages.push(newImage);
+
+    localStorage.setItem("createdImages", JSON.stringify(createdImages));
+
+    alert("Image Saved!");
+}
+
+/* =========================
+   GALLERY OPEN / CLOSE
+========================= */
+function openGallery() {
+    document.getElementById("gallery").style.display = "block";
+    renderGallery();
+}
+
+function closeGallery() {
+    document.getElementById("gallery").style.display = "none";
+}
+
+/* =========================
+   RENDER GALLERY
+========================= */
+function renderGallery() {
+
+    const container = document.getElementById("imageList");
+    container.innerHTML = "";
+
+    createdImages.forEach(img => {
+
+        const div = document.createElement("div");
+        div.style.border = "1px solid #ccc";
+        div.style.padding = "10px";
+        div.style.background = "#fff";
+        div.style.marginBottom = "10px";
+
+        div.innerHTML = `
+            <img src="${img.data}" style="width:100%; height:auto; display:block;"/>
+            <button onclick="deleteImage(${img.id})"
+                style="width:100%; margin-top:8px; padding:10px; background: #FF5156; cursor:pointer;">
+                Delete
+            </button>
+        `;
+
+        container.appendChild(div);
+    });
+} 
+
+/* =========================
+   DELETE IMAGE
+========================= */
+function deleteImage(id) {
+
+    createdImages = createdImages.filter(img => img.id !== id);
+
+    localStorage.setItem("createdImages", JSON.stringify(createdImages));
+
+    renderGallery();
+}
+
+/* =========================
+   EXPORT PDF (1 PAGE = 1 IMAGE)
+========================= */
+async function generateGalleryPDF() {
+
+    if (createdImages.length === 0) {
+        alert("No images to export");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "cm",
+        format: [21, 14.85]
+    });
+
+    for (let i = 0; i < createdImages.length; i++) {
+
+        const img = createdImages[i];
+
+        pdf.addImage(img.data, "PNG", 0, 0, 21, 14.85);
+
+        if (i !== createdImages.length - 1) {
+            pdf.addPage();
+        }
+    }
+
+    pdf.save("bulk-images.pdf");
+}
 
 /* ============================================
    END OF SCRIPT
