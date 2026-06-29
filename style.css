@@ -1,1 +1,231 @@
+/* ==========================
+   RESET
+========================== */
 
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#dcdcdc;
+    font-family:Arial, Helvetica, sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:30px;
+}
+
+/* ==========================
+   SHEET
+========================== */
+
+.sheet{
+    width:21cm;
+    min-height:14.85cm;
+    background:#fff;
+    border:3px solid #000;
+    padding:10px 12px;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ==========================
+   HEADER
+========================== */
+
+.top-header{
+    display:grid;
+    grid-template-columns:90px 1fr 95px;
+    align-items:flex-start;
+    margin-bottom:18px;
+}
+
+.left-logo{
+    width:78px;
+    height:auto;
+}
+
+.fest-logo{
+    width:440px;
+    max-width:100%;
+    justify-self:start;
+}
+
+.edition-logo{
+    width:82px;
+    justify-self:end;
+}
+
+/* ==========================
+   EVENT NAME
+========================== */
+
+.event-name{
+    font-size:24px;
+    font-weight:900;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    margin-bottom:16px;
+    outline:none;
+}
+
+/* ==========================
+   TABLE
+========================== */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    border:2px solid #000;
+}
+
+th{
+    height:48px;
+    font-size:17px;
+    font-weight:800;
+    text-align:center;
+}
+
+td{
+    height:38px;
+    font-size:16px;
+    padding:6px 8px;
+}
+
+tbody td{
+    outline:none;
+}
+
+/* ==========================
+   COLUMN WIDTH
+========================== */
+
+th:nth-child(1),
+td:nth-child(1){
+    width:55px;
+    text-align:center;
+}
+
+th:nth-child(2),
+td:nth-child(2){
+    width:360px;
+}
+
+th:nth-child(3),
+td:nth-child(3){
+    width:180px;
+    text-align:center;
+}
+
+th:nth-child(4),
+td:nth-child(4){
+    width:90px;
+    text-align:center;
+}
+
+th:nth-child(5),
+td:nth-child(5){
+    width:90px;
+    text-align:center;
+}
+
+th:nth-child(6),
+td:nth-child(6){
+    width:90px;
+    text-align:center;
+}
+
+th:nth-child(7),
+td:nth-child(7){
+    width:110px;
+    text-align:center;
+}
+
+th:nth-child(8),
+td:nth-child(8){
+    width:150px;
+}
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+}
+
+button{
+    padding:12px 22px;
+    border:none;
+    background:#000;
+    color:#fff;
+    cursor:pointer;
+    font-size:16px;
+    border-radius:6px;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+/* ==========================
+   AUTO HEIGHT
+========================== */
+
+.sheet.auto-height{
+    height:auto;
+}
+
+/* ==========================
+   PRINT
+========================== */
+
+@page{
+    size:A5 landscape;
+    margin:0;
+}
+
+@media print{
+
+    body{
+        background:#fff;
+        padding:0;
+    }
+
+    .buttons{
+        display:none;
+    }
+
+    .sheet{
+        width:21cm;
+        min-height:14.85cm;
+        border:3px solid #000;
+        margin:0;
+        page-break-inside:avoid;
+    }
+}
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media(max-width:900px){
+
+    body{
+        overflow-x:auto;
+        padding:15px;
+    }
+
+    .sheet{
+        width:21cm;
+        min-width:21cm;
+    }
+}
