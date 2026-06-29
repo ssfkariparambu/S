@@ -1,38 +1,44 @@
 const tableBody = document.getElementById("tableBody");
 const sheet = document.querySelector(".sheet");
 
-// Default 9 Rows
-for (let i = 0; i < 9; i++) {
-    createRow();
-}
+// ===============================
+// Create Default 9 Rows
+// ===============================
 
-updateSheetHeight();
+window.onload = function () {
+    for (let i = 0; i < 9; i++) {
+        createRow();
+    }
+    updateSheetHeight();
+};
 
-// ==========================
+// ===============================
 // Create Row
-// ==========================
+// ===============================
 
 function createRow() {
 
-    const tr = document.createElement("tr");
+    const row = document.createElement("tr");
 
     for (let i = 0; i < 8; i++) {
 
-        const td = document.createElement("td");
+        const cell = document.createElement("td");
 
-        td.contentEditable = "true";
+        cell.contentEditable = "true";
 
-        tr.appendChild(td);
+        cell.spellcheck = false;
+
+        row.appendChild(cell);
 
     }
 
-    tableBody.appendChild(tr);
+    tableBody.appendChild(row);
 
 }
 
-// ==========================
+// ===============================
 // Add Row
-// ==========================
+// ===============================
 
 function addRow() {
 
@@ -42,15 +48,15 @@ function addRow() {
 
 }
 
-// ==========================
+// ===============================
 // Delete Last Row
-// ==========================
+// ===============================
 
 function deleteRow() {
 
     if (tableBody.rows.length > 1) {
 
-        tableBody.deleteRow(tableBody.rows.length - 1);
+        tableBody.removeChild(tableBody.lastElementChild);
 
         updateSheetHeight();
 
@@ -58,13 +64,13 @@ function deleteRow() {
 
 }
 
-// ==========================
+// ===============================
 // Auto Height
-// ==========================
+// ===============================
 
 function updateSheetHeight() {
 
-    const rows = tableBody.rows.length;
+    let rows = tableBody.rows.length;
 
     if (rows <= 9) {
 
@@ -72,33 +78,59 @@ function updateSheetHeight() {
 
     } else {
 
-        const extra = rows - 9;
+        let extraRows = rows - 9;
 
-        sheet.style.height = (14.85 + (extra * 1.02)) + "cm";
+        let height = 14.85 + (extraRows * 1.02);
+
+        sheet.style.height = height + "cm";
 
     }
 
 }
 
-// ==========================
-// Tab Navigation
-// ==========================
+// ===============================
+// Enter Key → Next Cell
+// ===============================
+
+document.addEventListener("keydown", function (e) {
+
+    if (e.key === "Enter" && e.target.isContentEditable) {
+
+        e.preventDefault();
+
+        let editable = [...document.querySelectorAll("[contenteditable='true']")];
+
+        let index = editable.indexOf(document.activeElement);
+
+        if (index + 1 < editable.length) {
+
+            editable[index + 1].focus();
+
+        }
+
+    }
+
+});
+
+// ===============================
+// Tab Key → Next Cell
+// ===============================
 
 document.addEventListener("keydown", function (e) {
 
     if (e.key === "Tab") {
 
-        const cells = [...document.querySelectorAll("[contenteditable='true']")];
+        let editable = [...document.querySelectorAll("[contenteditable='true']")];
 
-        const index = cells.indexOf(document.activeElement);
+        let index = editable.indexOf(document.activeElement);
 
-        if (index > -1) {
+        if (index !== -1) {
 
             e.preventDefault();
 
-            if (cells[index + 1]) {
+            if (index + 1 < editable.length) {
 
-                cells[index + 1].focus();
+                editable[index + 1].focus();
 
             }
 
@@ -108,33 +140,9 @@ document.addEventListener("keydown", function (e) {
 
 });
 
-// ==========================
-// Enter = Next Cell
-// ==========================
-
-document.addEventListener("keydown", function (e) {
-
-    if (e.key === "Enter" && e.target.isContentEditable) {
-
-        e.preventDefault();
-
-        const cells = [...document.querySelectorAll("[contenteditable='true']")];
-
-        const index = cells.indexOf(document.activeElement);
-
-        if (cells[index + 1]) {
-
-            cells[index + 1].focus();
-
-        }
-
-    }
-
-});
-
-// ==========================
+// ===============================
 // Paste Plain Text
-// ==========================
+// ===============================
 
 document.addEventListener("paste", function (e) {
 
@@ -142,7 +150,7 @@ document.addEventListener("paste", function (e) {
 
         e.preventDefault();
 
-        const text = (e.clipboardData || window.clipboardData).getData("text");
+        let text = (e.clipboardData || window.clipboardData).getData("text");
 
         document.execCommand("insertText", false, text);
 
@@ -150,9 +158,9 @@ document.addEventListener("paste", function (e) {
 
 });
 
-// ==========================
+// ===============================
 // Print
-// ==========================
+// ===============================
 
 function printSheet() {
 
